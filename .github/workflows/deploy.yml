@@ -12,20 +12,21 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: npm
 
-      - name: Install Root Dependencies
+      - name: Install Dependencies
         run: npm install
 
-      - name: Build Library
+      - name: Build Angular Library
         run: npm run build
 
       - name: Pack Library
@@ -34,15 +35,19 @@ jobs:
           npm pack
           echo "TARBALL=$(ls *.tgz)" >> $GITHUB_ENV
 
-      - name: Build UI App
+      - name: Install Library in Demo App
         run: |
           cd template-builder
           npm install ../dist/${{ env.TARBALL }} --force
           npm install
-          npm run build -- --base-href /nowmail-email-teamplate-builder/
+
+      - name: Build Demo App
+        run: |
+          cd template-builder
+          npm run build -- --configuration production --base-href /nowmail-email-teamplate-builder/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: template-builder/dist/template-builder/browser
           branch: gh-pages
+          folder: template-builder/dist/template-builder/browser
