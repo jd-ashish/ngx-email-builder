@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -14,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -26,7 +25,7 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Build Angular Library
+      - name: Build Library
         run: npm run build
 
       - name: Pack Library
@@ -35,19 +34,18 @@ jobs:
           npm pack
           echo "TARBALL=$(ls *.tgz)" >> $GITHUB_ENV
 
-      - name: Install Library in Demo App
+      - name: Build Demo App
         run: |
           cd template-builder
           npm install ../dist/${{ env.TARBALL }} --force
           npm install
-
-      - name: Build Demo App
-        run: |
-          cd template-builder
           npm run build -- --configuration production --base-href /nowmail-email-teamplate-builder/
 
-      - name: Deploy to GitHub Pages
+      - name: Add .nojekyll
+        run: touch template-builder/dist/template-builder/.nojekyll
+
+      - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: template-builder/dist/template-builder/browser
+          folder: template-builder/dist/template-builder
