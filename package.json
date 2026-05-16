@@ -1,0 +1,46 @@
+{
+  "name": "ngx-email-builder",
+  "version": "1.0.0",
+  "description": "A high-end, standalone email template builder for Angular",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "build": "node scripts/sync-version.js && ng-packagr -p ng-package.json",
+    "prepublishOnly": "npm run build",
+    "app:refresh": "npm run build && cd dist && npm pack && cd ../template-builder && npm install ../dist/ngx-email-builder-$(node -p \"require('../package.json').version\").tgz && npm start"
+  },
+  "keywords": [
+    "angular",
+    "email",
+    "builder",
+    "template",
+    "ngx"
+  ],
+  "author": "Ashish Kumar",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jd-ashish/ngx-email-builder"
+  },
+  "bugs": {
+    "url": "https://github.com/jd-ashish/ngx-email-builder/issues"
+  },
+  "homepage": "https://github.com/jd-ashish/ngx-email-builder#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "ng-packagr": "^20.0.0",
+    "typescript": "~5.8.2",
+    "@angular/compiler-cli": "^20.0.0",
+    "@angular/compiler": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "@angular/common": "^20.0.0"
+  },
+  "peerDependencies": {
+    "sweetalert2": "^11.23.0",
+    "monaco-editor": "^0.53.0",
+    "@angular/common": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "@angular/forms": "^20.0.0",
+    "rxjs": "~7.8.0"
+  }
+}

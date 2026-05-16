@@ -1,0 +1,66 @@
+<div class="builder-shell">
+  <app-email-builder-header [viewport]="viewport()" [previewMode]="previewMode()" [editorView]="editorView()"
+    [templateName]="templateName()" (templateNameChange)="templateName.set($event)"
+    (viewportChange)="viewport.set($event)" (previewModeChange)="previewMode.set($event)"
+    (editorViewChange)="editorView.set($event)" (copyTemplate)="copyTemplate()" (saveTemplate)="saveTemplate()"
+    (exportTemplate)="exportTemplate()" (openMyTemplates)="openMyTemplates()" (clearCanvas)="clearCanvas()" />
+
+  <div class="builder-workspace" [class.resizing-panels]="resizingSide()"
+    [style.grid-template-columns]="workspaceGridColumns()">
+    <aside class="left-panel">
+      <app-email-builder-sidebar [blockLibrary]="blockLibrary()" [blocks]="blocks()"
+        [selectedBlockId]="selectedBlockId()" [sampleTemplates]="sampleTemplates" [draggedBlockId]="draggedBlockId()"
+        [dropTargetIndex]="dropTargetIndex()" (addBlock)="addBlock($event)" (selectBlock)="selectBlock($event)"
+        (openTemplateDrawer)="openSampleTemplates()" (applyTemplate)="applyTemplate($event)"
+        (libraryDragStart)="onLibraryDragStart($event.preset, $event.event)"
+        (blockDragStart)="onBlockDragStart($event.blockId, $event.event)"
+        (dragOver)="onDragOver($event.event, $event.index)" (drop)="onDrop($event.event, $event.index)"
+        (clearDragState)="clearDragState()" />
+      <button type="button" class="resize-handle resize-handle-left" title="Resize block library"
+        (mousedown)="startPanelResize('left', $event)"></button>
+    </aside>
+
+    <app-email-template-canvas [blocks]="blocks()" [selectedBlockId]="selectedBlockId()" [viewport]="viewport()"
+      [previewMode]="previewMode()" [editorView]="editorView()" [sourceCode]="sourceCode()"
+      [sourceStatus]="sourceStatus()" [variableValues]="variableValues()" [draggedBlockId]="draggedBlockId()"
+      [dropTargetIndex]="dropTargetIndex()" (editorViewChange)="editorView.set($event)"
+      (sourceCodeChange)="onSourceCodeChange($event)" (selectBlock)="selectBlock($event)"
+      (blockDragStart)="onBlockDragStart($event.blockId, $event.event)"
+      (dragOver)="onDragOver($event.event, $event.index)" (drop)="onDrop($event.event, $event.index)"
+      (clearDragState)="clearDragState()" (dropTargetIndexChange)="dropTargetIndex.set($event)"
+      (updateBlock)="updateSelected($event.key, $event.value)"
+      (columnCountChange)="updateColumnCount($event.blockId, $event.columnCount)"
+      (addColumnContent)="addColumnContent($event.blockId, $event.columnIndex, $event.type)"
+      (removeColumnContent)="removeColumnContent($event.blockId, $event.columnIndex, $event.childId)"
+      (moveBlock)="moveBlock($event.blockId, $event.direction, $event.event)"
+      (duplicateBlock)="duplicateBlock($event.blockId, $event.event)"
+      (deleteBlock)="deleteBlock($event.blockId, $event.event)" />
+
+    <aside class="right-panel">
+      <button type="button" class="resize-handle resize-handle-right" title="Resize inspector"
+        (mousedown)="startPanelResize('right', $event)"></button>
+      <app-email-builder-inspector [block]="selectedBlock()" [variables]="variables()"
+        (update)="updateSelected($event.key, $event.value)" (addVariable)="addVariable()"
+        (updateVariable)="updateVariable($event.id, $event.key, $event.value)" (deleteVariable)="deleteVariable($event)"
+        (insertVariable)="insertVariableToken($event)" (focusField)="focusedField.set($event)"
+        (uploadImage)="handleImageUpload($event)" (uploadSocialIcon)="handleSocialIconUpload($event)" />
+    </aside>
+  </div>
+
+  <app-email-builder-footer [isSaving]="isSaving()" [lastSaved]="lastSaved()" [blockCount]="blocks().length"
+    [variableCount]="variables().length" [autoSaveEnabled]="autoSaveEnabled()" [version]="libVersion"
+    (autoSaveToggle)="autoSaveEnabled.set($event)" />
+
+  @if (templateDrawerOpen()) {
+  <app-email-builder-template-drawer [templates]="sampleTemplates" [initialTab]="drawerTab()"
+    (close)="templateDrawerOpen.set(false)" (useTemplate)="applyTemplate($event)"
+    (loadSavedTemplate)="loadSavedTemplate($event)" />
+  }
+
+  @if (toastMessage()) {
+    <div class="builder-toast" [class.show]="toastMessage()">
+      <span class="material-symbols-outlined">check_circle</span>
+      {{ toastMessage() }}
+    </div>
+  }
+</div>
