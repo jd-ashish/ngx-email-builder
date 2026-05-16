@@ -42,10 +42,10 @@ jobs:
           npm run build -- --configuration production --base-href /nowmail-email-teamplate-builder/
 
       - name: Add .nojekyll
-        run: touch template-builder/dist/template-builder/.nojekyll
+        run: touch template-builder/dist/template-builder/browser/.nojekyll
 
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: template-builder/dist/template-builder
+          folder: template-builder/dist/template-builder/browser
