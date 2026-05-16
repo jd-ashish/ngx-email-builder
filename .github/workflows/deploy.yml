@@ -37,8 +37,8 @@ jobs:
       - name: Build UI App
         run: |
           cd template-builder
+          npm install ../dist/${{ env.TARBALL }} --force
           npm install
-          npm install ../dist/${{ env.TARBALL }}
           npm run build -- --base-href /nowmail-email-teamplate-builder/
 
       - name: Deploy to GitHub Pages
