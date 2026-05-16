@@ -39,7 +39,7 @@ jobs:
           cd template-builder
           npm install ../dist/${{ env.TARBALL }} --force
           npm install
-          npm run build -- --configuration production --base-href /ngx-email-builder/
+          npm run build
 
       - name: Add .nojekyll
         run: touch template-builder/dist/template-builder/browser/.nojekyll
